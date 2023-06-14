@@ -1,0 +1,4 @@
+name: minecraftersPlugin
+version: '${version}'
+main: minecrafters.minecraftersplugin.MinecraftersPlugin
+api-version: 1.19

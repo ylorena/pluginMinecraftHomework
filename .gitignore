@@ -1,0 +1,10 @@
+world
+world_nether
+world_the_end
+logs
+bundler
+.vscode
+minecraftersPlugin/.gradle
+minecraftersPlugin/.idea
+minecraftersPlugin/gradle
+minecraftersPlugin/build
