@@ -8,8 +8,6 @@ public final class MinecraftersPlugin extends JavaPlugin {
     @Override
     public void onEnable() {
         // Plugin startup logic
-        Bukkit.banIP("localhost");
-        Bukkit.banIP("127.0.0.1");
 
     }
 
