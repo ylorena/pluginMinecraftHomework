@@ -10,11 +10,13 @@ public class PlayerLevelManager {
     private int level;
     private int experience;
     private BossBar bossBar;
+    private String tipo;
 
-    public PlayerLevelManager(Player player, Plugin plugin) {
+    public PlayerLevelManager(Player player, Plugin plugin, String tipo) {
         this.level = 1;
         this.experience = 0;
-        this.bossBar = plugin.getServer().createBossBar("Level: " + level, BarColor.GREEN, BarStyle.SOLID);
+        this.tipo = tipo;
+        this.bossBar = plugin.getServer().createBossBar("Level de: " +tipo+" : "+ level, BarColor.YELLOW, BarStyle.SEGMENTED_6);
         bossBar.addPlayer(player);
     }
 
@@ -32,7 +34,7 @@ public class PlayerLevelManager {
 
     public void addExperience(int amount) {
         experience += amount;
-        
+
         if (experience >= getExperienceRequiredForLevelUp(level)) {
             levelUp();
             setExperience(0);
@@ -43,9 +45,12 @@ public class PlayerLevelManager {
     private void levelUp() {
         level++;
         bossBar.setTitle("Level: " + level);
+
+    bossBar.setVisible(false);
     }
 
     private int getExperienceRequiredForLevelUp(int currentLevel) {
         return currentLevel * 10; // Example formula: 10 experience points per level
     }
+
 }

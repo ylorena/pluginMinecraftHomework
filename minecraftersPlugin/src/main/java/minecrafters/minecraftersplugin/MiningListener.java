@@ -18,14 +18,15 @@ public class MiningListener implements Listener {
     @EventHandler
     public void onBlockBreak(BlockBreakEvent event) {
         Player player = event.getPlayer();
-        PlayerLevelManager playerLevelManager = getPlayerLevelManager(player);
+        PlayerLevelManager playerLevelManager = getPlayerLevelManager(player, "Mineração");
         playerLevelManager.addExperience(1);
     }
 
-    private PlayerLevelManager getPlayerLevelManager(Player player) {
-        if (playerLevelManager == null) {
-            playerLevelManager = new PlayerLevelManager(player, plugin);
+    private PlayerLevelManager getPlayerLevelManager(Player player, String tipo) {
+        if (this.playerLevelManager == null) {
+            this.playerLevelManager = new PlayerLevelManager(player, plugin, tipo);
         }
-        return playerLevelManager;
+
+        return this.playerLevelManager;
     }
 }
