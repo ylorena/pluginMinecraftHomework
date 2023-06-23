@@ -26,13 +26,18 @@ public class PlayerLevelManager {
         return experience;
     }
 
+    public void setExperience(int xp){
+        this.experience = xp;
+    }
+
     public void addExperience(int amount) {
         experience += amount;
-        bossBar.setProgress((double) experience / getExperienceRequiredForLevelUp(level));
-
+        
         if (experience >= getExperienceRequiredForLevelUp(level)) {
             levelUp();
+            setExperience(0);
         }
+        bossBar.setProgress((double) experience / getExperienceRequiredForLevelUp(level));
     }
 
     private void levelUp() {
