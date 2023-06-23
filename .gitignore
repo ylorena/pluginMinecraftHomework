@@ -1,9 +1,11 @@
-minecraftersPlugin/build
 world
 world_nether
 world_the_end
 logs
 bundler
 .vscode
+minecraftersPlugin/.idea
+minecraftersPlugin/.gradle
 minecraftersPlugin/gradle
-
+minecraftersPlugin/build
+minecraftersPlugin/bin
