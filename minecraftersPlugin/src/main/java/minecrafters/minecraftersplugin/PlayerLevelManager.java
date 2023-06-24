@@ -16,7 +16,7 @@ public class PlayerLevelManager {
         this.level = 1;
         this.experience = 0;
         this.tipo = tipo;
-        this.bossBar = plugin.getServer().createBossBar("Level de: " +tipo+" : "+ level, BarColor.YELLOW, BarStyle.SEGMENTED_6);
+        this.bossBar = plugin.getServer().createBossBar("Level de " +this.tipo+": "+ level, BarColor.YELLOW, BarStyle.SEGMENTED_6);
         bossBar.addPlayer(player);
     }
 
@@ -44,9 +44,8 @@ public class PlayerLevelManager {
 
     private void levelUp() {
         level++;
-        bossBar.setTitle("Level: " + level);
+        bossBar.setTitle("Level de " +this.tipo+": "+level);
 
-    bossBar.setVisible(false);
     }
 
     private int getExperienceRequiredForLevelUp(int currentLevel) {

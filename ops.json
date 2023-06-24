@@ -1,1 +1,8 @@
-[]
+[
+  {
+    "uuid": "38f8e665-dcac-3f4c-aaed-be580e0a818b",
+    "name": "CafeDeTerno",
+    "level": 4,
+    "bypassesPlayerLimit": false
+  }
+]
