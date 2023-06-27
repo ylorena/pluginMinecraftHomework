@@ -1,4 +1,6 @@
 package minecrafters.minecraftersplugin;
+import minecrafters.minecraftersplugin.listeners.EntityListener;
+import minecrafters.minecraftersplugin.listeners.MiningListener;
 import org.bukkit.plugin.java.JavaPlugin;
 
 public final class MinecraftersPlugin extends JavaPlugin {

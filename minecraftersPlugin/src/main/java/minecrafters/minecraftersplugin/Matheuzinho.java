@@ -7,6 +7,10 @@ public class Matheuzinho<T> {
         this.current = null;
     }
 
+    public Matheuzinho(T stuff){
+        setNext(stuff);
+    }
+
     public void setNext(T stuff){
         if(this.current==null){
             this.current = generateNode(stuff);
@@ -18,7 +22,7 @@ public class Matheuzinho<T> {
 
     public Node<T> getLast(){
       Node<T> current = this.current;
-      while(current.getNext()!=null){
+      while(current != null && current.getNext()!=null){
           current = current.getNext();
       }
       return current;
