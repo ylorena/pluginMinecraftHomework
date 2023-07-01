@@ -1,15 +1,10 @@
 package minecrafters.minecraftersplugin;
 
-import org.bukkit.boss.BarColor;
-import org.bukkit.boss.BarStyle;
 import org.bukkit.boss.BossBar;
-import org.bukkit.boss.KeyedBossBar;
-import org.bukkit.entity.Player;
 import org.bukkit.plugin.Plugin;
 
 import java.io.*;
 import java.util.HashMap;
-import java.util.Iterator;
 import java.util.Map;
 import java.util.UUID;
 
@@ -52,7 +47,7 @@ public class LevelController {
         return (int) Math.round(100 * Math.pow(1.1, currentLevel));
     }
 
-    private void updateBossBar() {
+    public void updateBossBar() {
         double progress = (double) experience / getExperienceRequiredForLevelUp(level);
         bossBar.setProgress(progress);
         bossBar.setTitle(this.tipo + " - Level " + level);
