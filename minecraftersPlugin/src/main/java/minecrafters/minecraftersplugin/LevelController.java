@@ -22,17 +22,6 @@ public class LevelController {
     static private final Plugin plugin = null;
     static private LevelController levelController = null;
 
-        // this.tipo = tipo;
-        // this.plugin = plugin;
-        // this.playerId = player.getUniqueId();
-
-        // this.bossBar = plugin.getServer().createBossBar("", BarColor.YELLOW,
-        //         BarStyle.SEGMENTED_6); // TODO segments, color and style
-        // bossBar.addPlayer(player);
-
-        // loadPlayerData();
-        // updateBossBar();
-
     static public LevelController getLevelController() {
         if (levelController == null) {
             levelController = new LevelController();

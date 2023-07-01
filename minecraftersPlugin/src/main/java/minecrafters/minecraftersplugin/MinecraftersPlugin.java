@@ -28,7 +28,8 @@ public final class MinecraftersPlugin extends JavaPlugin {
         EventExecutor eventExecutor = new EventExecutor() {
             @Override
             public void execute(Listener listener, Event event) throws EventException {
-                System.out.println(event.getEventName());
+                EventToFunction eventToFunction = new EventToFunction();
+                eventToFunction.eventToFunction(LevelNamesEnum.MINING);
             }
         };
 
