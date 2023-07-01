@@ -3,19 +3,21 @@ package minecrafters.minecraftersplugin;
 import org.bukkit.Bukkit;
 
 public class EventToFunction {
+
+    private Runnable[] eventToFunctions = new Runnable[] {
+        this::test,
+        this::test,
+        this::test,
+        this::test,
+        this::test,
+        this::test
+    };
+
     public void test() {
         Bukkit.getServer().broadcastMessage("Test");
     }
 
-    private IEventToFunction[] eventToFunctions = new IEventToFunction[] {
-            new IEventToFunction() {
-                public void call() {
-                    test();
-                }
-            },
-    };
-
-    public void eventToFunction(LevelNamesEnum levelName) {
-        eventToFunctions[0].call();
+    public void eventToFunction(EventNamesEnum levelName) {
+        eventToFunctions[levelName.ordinal()].run();
     }
 }

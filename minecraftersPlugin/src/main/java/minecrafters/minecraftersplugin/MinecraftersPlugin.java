@@ -2,6 +2,7 @@ package minecrafters.minecraftersplugin;
 
 import minecrafters.minecraftersplugin.listeners.GenericListener;
 
+import org.bukkit.Bukkit;
 import org.bukkit.event.Event;
 import org.bukkit.event.EventException;
 import org.bukkit.event.EventPriority;
@@ -28,8 +29,8 @@ public final class MinecraftersPlugin extends JavaPlugin {
         EventExecutor eventExecutor = new EventExecutor() {
             @Override
             public void execute(Listener listener, Event event) throws EventException {
-                EventToFunction eventToFunction = new EventToFunction();
-                eventToFunction.eventToFunction(LevelNamesEnum.MINING);
+                EventToFunction _eventToFunction = new EventToFunction();
+                _eventToFunction.eventToFunction(EventNamesEnum.findByEventName(event.getEventName()));
             }
         };
 
