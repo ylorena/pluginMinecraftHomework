@@ -1,5 +1,7 @@
 package minecrafters.minecraftersplugin;
 
+import org.bukkit.Bukkit;
+
 public class EventToFunction {
 
     private Runnable[] eventToFunctions = new Runnable[] {
