@@ -15,8 +15,11 @@ import org.bukkit.plugin.java.JavaPlugin;
 
 public final class MinecraftersPlugin extends JavaPlugin {
 
+    private LevelController levelController;
+
     @Override
     public void onEnable() {
+        levelController = LevelController.getLevelController();
         registerGenericEventHandler(BlockBreakEvent.class, this, new GenericListener());
         registerGenericEventHandler(PlayerJoinEvent.class, this, new GenericListener());
     }
@@ -29,9 +32,11 @@ public final class MinecraftersPlugin extends JavaPlugin {
         EventExecutor eventExecutor = new EventExecutor() {
             @Override
             public void execute(Listener listener, Event event) throws EventException {
-                EventToFunction _eventToFunction = new EventToFunction();
-                _eventToFunction.eventToFunction(EventNamesEnum.findByEventName(event.getEventName()));
+            if (event instanceof BlockBreakEvent) {
+                BlockBreakEvent blockBreakEvent = (BlockBreakEvent) event;
+                updateBossBar(blockBreakEvent.getPlayer().getUniqueId());
             }
+        }
         };
 
         plugin.getServer().getPluginManager().registerEvent(
@@ -40,5 +45,10 @@ public final class MinecraftersPlugin extends JavaPlugin {
                 EventPriority.NORMAL,
                 eventExecutor,
                 plugin);
+    }
+
+    private void updateBossBar(UUID playerId) {
+        
+        LevelController.getLevelController().updateBossBar();
     }
 }

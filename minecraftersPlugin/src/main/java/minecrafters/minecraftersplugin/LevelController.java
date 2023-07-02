@@ -65,6 +65,26 @@ public class LevelController {
         }
     }
 
+    public void updateBossBar() {
+        double progress = (double) experience / getExperienceRequiredForLevelUp(level);
+        bossBar.setProgress(progress);
+        bossBar.setTitle(this.tipo + " - Level " + level);
+
+        if (level % 5 == 0) {
+            Player player = Bukkit.getPlayer(playerId);
+            if (player != null) {
+                player.setWalkSpeed(0.3f);
+            }
+        } else {
+            Player player = Bukkit.getPlayer(playerId);
+            if (player != null) {
+                player.setWalkSpeed(0.2f); 
+            }
+        }
+
+        
+    }
+
     private void savePlayerData() {
         // Save player's data to file
         File dataFolder = new File(plugin.getDataFolder(), "playerdata");
