@@ -12,14 +12,14 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.UUID;
 
+import org.bukkit.Chunk.LoadLevel;
 import org.bukkit.boss.BossBar;
+import org.bukkit.entity.Player;
 import org.bukkit.event.Event;
 import org.bukkit.event.player.PlayerEvent;
 import org.bukkit.plugin.Plugin;
 
 public class LevelHandler {
-    private int level = 1;
-    private int experienceToLevelUp = 0;
     static private BossBar bossBar = null;
     static private UUID playerId = null;
     static private Plugin plugin = null;
@@ -27,16 +27,18 @@ public class LevelHandler {
 
     static public LevelHandler getLevelHandler(Plugin _plugin) {
         if (levelHandler == null) {
+            bossBar = _plugin.getServer().createBossBar("", org.bukkit.boss.BarColor.GREEN,
+                    org.bukkit.boss.BarStyle.SOLID);
             levelHandler = new LevelHandler();
             plugin = _plugin;
         }
-        bossBar = _plugin.getServer().createBossBar("", org.bukkit.boss.BarColor.GREEN,
-                org.bukkit.boss.BarStyle.SOLID);
         return levelHandler;
     }
 
     public void handleUserLevel(Event event) {
-        createPlayerData();
+        if (loadPlayerData() == null) {
+            createPlayerData();
+        }
         if (event instanceof PlayerEvent) {
             playerId = ((PlayerEvent) event).getPlayer().getUniqueId();
         }
@@ -47,12 +49,13 @@ public class LevelHandler {
             levelUp(eventName);
         }
 
-        savePlayerData(eventName, level, experienceToLevelUp);
+        savePlayerData(eventName, getEventLevel(eventName), getEventExperience(eventName));
         updateBossBar(eventName);
     }
 
     public void increaseXp(EventNamesEnum eventName) {
         savePlayerData(eventName, getEventLevel(eventName), getEventExperience(eventName) + 1);
+        System.out.print(getEventExperience(eventName) + 1);
     }
 
     public double getExperienceRequiredForLevelUp(int level) {
@@ -60,15 +63,19 @@ public class LevelHandler {
     }
 
     public void levelUp(EventNamesEnum eventName) {
-        level += 1;
-        experienceToLevelUp = (int) getExperienceRequiredForLevelUp(level);
-        updateBossBar(eventName);
+        savePlayerData(eventName, getEventLevel(eventName) + 1, getEventExperience(eventName));
     }
 
     public void updateBossBar(EventNamesEnum eventName) {
-        double progress = (double) experienceToLevelUp / getExperienceRequiredForLevelUp(level);
+        Player player = plugin.getServer().getPlayer(playerId);
+        bossBar.removePlayer(player);
+        double progress = (double) getEventExperience(eventName)
+                / getExperienceRequiredForLevelUp(getEventLevel(eventName));
         bossBar.setProgress(progress);
-        bossBar.setTitle(eventName.toString() + " - Level " + level);
+        bossBar.setTitle(eventName.toString() + " - Level " + getEventLevel(eventName));
+
+        bossBar.addPlayer(player);
+        bossBar.setVisible(true);
     }
 
     private int getEventLevel(EventNamesEnum eventName) {
@@ -82,7 +89,7 @@ public class LevelHandler {
     }
 
     private Map<String, String> loadPlayerData() {
-        File dataFile = new File("plugins/MinecraftersPlugin/playerdata/" + playerId + ".dat");
+        File dataFile = new File("plugins/minecraftersPlugin/playerdata/" + playerId + ".dat");
         try (ObjectInputStream ois = new ObjectInputStream(new FileInputStream(dataFile))) {
             return (Map<String, String>) ois.readObject();
         } catch (IOException | ClassNotFoundException e) {
@@ -92,7 +99,7 @@ public class LevelHandler {
     }
 
     static private void createPlayerData() {
-        File dataFolder = new File("plugins/MinecraftersPlugin/playerdata");
+        File dataFolder = new File("plugins/minecraftersPlugin/playerdata");
         if (!dataFolder.exists()) {
             dataFolder.mkdirs();
         }
@@ -121,10 +128,10 @@ public class LevelHandler {
         File dataFile = new File(dataFolder, playerId + ".dat");
         Map<String, String> data = loadPlayerData();
 
-        data.put(eventName.toString(), "{0}+{1}".format(Integer.toString(level), Integer.toString(experience)));
-
+        data.put(eventName.toString(), String.format("%d+%d", level, experience));
         try (ObjectOutputStream oos = new ObjectOutputStream(new FileOutputStream(dataFile))) {
             oos.writeObject(data);
+            oos.flush();
             plugin.getServer().getConsoleSender().sendMessage("[MinecraftersPlugin] Player data saved for " + playerId);
         } catch (IOException e) {
             e.printStackTrace();

@@ -16,8 +16,6 @@ public enum LevelNamesEnum {
     TRADING("Trading"),
     EXPLORING("Exploring"),
     FLYING("Flying"),
-    MAGIC("Magic"), // TODO
-    TINKERING("Tinkering"), // TODO
     ARMORING("Armoring"),
     WEAPONRY("Weaponry"),
     COOKING("Cooking"),
