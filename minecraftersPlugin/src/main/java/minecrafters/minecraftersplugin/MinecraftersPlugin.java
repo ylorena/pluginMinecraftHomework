@@ -6,6 +6,7 @@ import org.bukkit.event.EventException;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.block.BlockBreakEvent;
+import org.bukkit.event.entity.EntityDeathEvent;
 import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.plugin.EventExecutor;
 import org.bukkit.plugin.Plugin;
@@ -20,6 +21,7 @@ public final class MinecraftersPlugin extends JavaPlugin {
         this.plugin = this;
         registerGenericEventHandler(PlayerJoinEvent.class, this, new GenericListener());
         registerGenericEventHandler(BlockBreakEvent.class, this, new GenericListener());
+        registerGenericEventHandler(EntityDeathEvent.class, this, new GenericListener());
     }
 
     @Override

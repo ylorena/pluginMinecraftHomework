@@ -41,7 +41,7 @@ public class LevelHandler {
         if (event instanceof PlayerEvent) {
             playerId = ((PlayerEvent)event).getPlayer().getUniqueId();
         }
-        EventNamesEnum eventName = EventNamesEnum.findByEventName(event.getEventName());
+        ActivityEnum eventName = ActivityEnum.findByDisplayName(event.getEventName());
 
         increaseXp(eventName);
         if (getEventExperience(eventName) >= getExperienceRequiredForLevelUp(getEventLevel(eventName))) {
@@ -52,7 +52,7 @@ public class LevelHandler {
         updateBossBar(eventName);
     }
 
-    public void increaseXp(EventNamesEnum eventName) {
+    public void increaseXp(ActivityEnum eventName) {
         savePlayerData(eventName, getEventLevel(eventName), getEventExperience(eventName) + 1);
         System.out.print(getEventExperience(eventName) + 1);
     }
@@ -61,28 +61,28 @@ public class LevelHandler {
         return (int) Math.pow(level, 2) + 100;
     }
 
-    public void levelUp(EventNamesEnum eventName) {
+    public void levelUp(ActivityEnum eventName) {
         savePlayerData(eventName, getEventLevel(eventName) + 1, 0);
     }
 
-    public void updateBossBar(EventNamesEnum eventName) {
+    public void updateBossBar(ActivityEnum eventName) {
         Player player = plugin.getServer().getPlayer(playerId);
         bossBar.removePlayer(player);
         double progress = (double) getEventExperience(eventName)
                 / getExperienceRequiredForLevelUp(getEventLevel(eventName));
         bossBar.setProgress(progress);
-        bossBar.setTitle(eventName.toString() + " - Level " + getEventLevel(eventName));
+        bossBar.setTitle(eventName.getDisplayName() + " - Level " + getEventLevel(eventName));
 
         bossBar.addPlayer(player);
         bossBar.setVisible(true);
     }
 
-    private int getEventLevel(EventNamesEnum eventName) {
+    private int getEventLevel(ActivityEnum eventName) {
         Map<String, String> playerData = loadPlayerData();
         return Integer.parseInt(playerData.get(eventName.toString()).split("\\+")[0]);
     }
 
-    private int getEventExperience(EventNamesEnum eventName) {
+    private int getEventExperience(ActivityEnum eventName) {
         Map<String, String> playerData = loadPlayerData();
         return Integer.parseInt(playerData.get(eventName.toString()).split("\\+")[1]);
     }
@@ -106,7 +106,7 @@ public class LevelHandler {
             File dataFile = new File(dataFolder, playerId + ".dat");
             Map<String, String> data = new HashMap<String, String>();
 
-            for (EventNamesEnum eventName : EventNamesEnum.values()) {
+            for (ActivityEnum eventName : EventNamesEnum.values()) {
                 data.put(eventName.toString(), "0+0");
             }
 
@@ -118,7 +118,7 @@ public class LevelHandler {
         }
     }
 
-    private void savePlayerData(EventNamesEnum eventName, int level, int experience) {
+    private void savePlayerData(ActivityEnum eventName, int level, int experience) {
         File dataFolder = new File(plugin.getDataFolder(), "playerdata");
         if (!dataFolder.exists()) {
             dataFolder.mkdirs();
