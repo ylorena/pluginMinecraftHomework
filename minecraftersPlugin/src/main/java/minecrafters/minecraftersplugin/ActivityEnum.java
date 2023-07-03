@@ -29,11 +29,18 @@ public enum ActivityEnum {
 
     private final String displayName;
     private final String eventName;
-    private static final Map<String, ActivityEnum> lookup = new HashMap<>();
+    private static final Map<String, ActivityEnum> lookupEvent = new HashMap<>();
+    private static final Map<String, ActivityEnum> lookupDisplay = new HashMap<>();
 
     static {
         for (ActivityEnum activity : ActivityEnum.values()) {
-            lookup.put(activity.getDisplayName(), activity);
+            lookupEvent.put(activity.getEventName(), activity);
+        }
+    }
+
+    static {
+        for (ActivityEnum activity : ActivityEnum.values()) {
+            lookupDisplay.put(activity.getDisplayName(), activity);
         }
     }
 
@@ -51,7 +58,11 @@ public enum ActivityEnum {
     }
 
     public static ActivityEnum findByDisplayName(String displayName) {
-        return lookup.get(displayName);
+        return lookupDisplay.get(displayName);
+    }
+
+    public static ActivityEnum findByEventName(String eventName) {
+        return lookupEvent.get(eventName);
     }
 
     @Override

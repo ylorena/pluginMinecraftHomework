@@ -12,6 +12,7 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.UUID;
 
+import org.bukkit.Bukkit;
 import org.bukkit.boss.BossBar;
 import org.bukkit.entity.Player;
 import org.bukkit.event.Event;
@@ -41,7 +42,7 @@ public class LevelHandler {
         if (event instanceof PlayerEvent) {
             playerId = ((PlayerEvent)event).getPlayer().getUniqueId();
         }
-        ActivityEnum eventName = ActivityEnum.findByDisplayName(event.getEventName());
+        ActivityEnum eventName = ActivityEnum.findByEventName(event.getEventName());
 
         increaseXp(eventName);
         if (getEventExperience(eventName) >= getExperienceRequiredForLevelUp(getEventLevel(eventName))) {
@@ -54,7 +55,6 @@ public class LevelHandler {
 
     public void increaseXp(ActivityEnum eventName) {
         savePlayerData(eventName, getEventLevel(eventName), getEventExperience(eventName) + 1);
-        System.out.print(getEventExperience(eventName) + 1);
     }
 
     public double getExperienceRequiredForLevelUp(int level) {
@@ -79,12 +79,12 @@ public class LevelHandler {
 
     private int getEventLevel(ActivityEnum eventName) {
         Map<String, String> playerData = loadPlayerData();
-        return Integer.parseInt(playerData.get(eventName.toString()).split("\\+")[0]);
+        return Integer.parseInt(playerData.get(eventName.getEventName()).split("\\+")[0]);
     }
 
     private int getEventExperience(ActivityEnum eventName) {
         Map<String, String> playerData = loadPlayerData();
-        return Integer.parseInt(playerData.get(eventName.toString()).split("\\+")[1]);
+        return Integer.parseInt(playerData.get(eventName.getEventName()).split("\\+")[1]);
     }
 
     private Map<String, String> loadPlayerData() {
@@ -106,8 +106,8 @@ public class LevelHandler {
             File dataFile = new File(dataFolder, playerId + ".dat");
             Map<String, String> data = new HashMap<String, String>();
 
-            for (ActivityEnum eventName : EventNamesEnum.values()) {
-                data.put(eventName.toString(), "0+0");
+            for (ActivityEnum eventName : ActivityEnum.values()) {
+                data.put(eventName.getEventName().toString(), "0+0");
             }
 
             try (ObjectOutputStream oos = new ObjectOutputStream(new FileOutputStream(dataFile))) {
@@ -127,11 +127,10 @@ public class LevelHandler {
         File dataFile = new File(dataFolder, playerId + ".dat");
         Map<String, String> data = loadPlayerData();
 
-        data.put(eventName.toString(), String.format("%d+%d", level, experience));
+        data.put(eventName.getEventName(), String.format("%d+%d", level, experience));
         try (ObjectOutputStream oos = new ObjectOutputStream(new FileOutputStream(dataFile))) {
             oos.writeObject(data);
             oos.flush();
-            plugin.getServer().getConsoleSender().sendMessage("[MinecraftersPlugin] Player data saved for " + playerId);
         } catch (IOException e) {
             e.printStackTrace();
         }
