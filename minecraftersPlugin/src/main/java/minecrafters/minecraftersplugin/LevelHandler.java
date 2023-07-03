@@ -55,14 +55,105 @@ public class LevelHandler {
 
     public void increaseXp(ActivityEnum eventName) {
         savePlayerData(eventName, getEventLevel(eventName), getEventExperience(eventName) + 1);
+        
+            if (getEventLevel(eventName) >= 20) {
+            Player player = Bukkit.getPlayer(playerId);
+            if (player != null) {
+                controlFire(player);
+                controlWater(player);
+                controlEarth(player);
+                controlAir(player);
+            }
+        }
+
+        if (eventName == ActivityEnum.MINING && getEventLevel(eventName) >= 15) {
+            Player player = Bukkit.getPlayer(playerId);
+            if (player != null) {
+                player.addPotionEffect(new PotionEffect(PotionEffectType.FAST_DIGGING, Integer.MAX_VALUE, 1));
+            }
+        }
+
+        if (eventName == ActivityEnum.FISHING && getEventLevel(eventName) >= 10) {
+            plugin.getServer().getPluginManager().registerEvents(new FishingListener(), plugin);
+        }
+
+        savePlayerData(eventName, getEventLevel(eventName), getEventExperience(eventName) + 1);
     }
+
+    private void controlFire(Player player) {
+        player.launchProjectile(Fireball.class);
+    }
+
+    private void controlEarth(Player player) {
+        Location playerLocation = player.getLocation();
+        World world = player.getWorld();
+        Block block = playerLocation.getBlock();
+        block.setType(Material.STONE);
+    }
+
+    private void controlAir(Player player) {
+        Location playerLocation = player.getLocation();
+        World world = player.getWorld();
+        player.setVelocity(player.getVelocity().add(new Vector(0, 1, 0)));
+        world.spawnParticle(Particle.CLOUD, playerLocation, 100);
+    }
+
+    private void controlWater(Player player) {
+        Location playerLocation = player.getLocation();
+        World world = player.getWorld();
+        world.spawnParticle(Particle.WATER_SPLASH, playerLocation, 100);
+        world.playSound(playerLocation, Sound.ENTITY_PLAYER_SPLASH, 1.0f, 1.0f);
+
+    }
+
+
 
     public double getExperienceRequiredForLevelUp(int level) {
         return (int) Math.pow(level, 2) + 100;
     }
 
+    private void checkLevel50() {
+            if (getEventLevel(ActivityEnum.MINING) == 50) {
+            World world = Bukkit.getWorld("world"); //Substitua world pelo nome do seu mundo
+            if (world != null) {
+                world.setTime(18000);
+
+                Player player = Bukkit.getPlayer(playerId);
+                if (player != null) {
+                    player.getInventory().addItem(new ItemStack(Material.TORCH, 1));
+                    player.addPotionEffect(new PotionEffect(PotionEffectType.NIGHT_VISION, Integer.MAX_VALUE, 0));
+                }
+            }
+        }
+    }
+
     public void levelUp(ActivityEnum eventName) {
-        savePlayerData(eventName, getEventLevel(eventName) + 1, 0);
+        int currentLevel = getEventLevel(eventName);
+        int nextLevel = currentLevel + 1;
+
+        if (nextLevel == 3) {
+            Player player = Bukkit.getPlayer(playerId);
+            if (player != null) {
+                World world = player.getWorld();
+                Location chestLocation = player.getLocation().add(0, 1, 0); // Posição acima do jogador
+                
+                Block chestBlock = world.getBlockAt(chestLocation);
+                chestBlock.setType(Material.CHEST);
+                
+                Chest chest = (Chest) chestBlock.getState();
+                Inventory chestInventory = chest.getInventory();
+                chestInventory.addItem(new ItemStack(Material.DIAMOND, 1));
+                chestInventory.addItem(new ItemStack(Material.GOLD_INGOT, 3));
+                
+                player.sendMessage("Você encontrou um baú escondido!");
+
+                world.playSound(chestLocation, Sound.BLOCK_END_PORTAL_FRAME_FILL, 1.0f, 1.0f);
+                world.spawnParticle(Particle.EXPLOSION_NORMAL, chestLocation, 10);
+            }
+        }
+
+        savePlayerData(eventName, nextLevel, 0);
+
     }
 
     public void updateBossBar(ActivityEnum eventName) {
