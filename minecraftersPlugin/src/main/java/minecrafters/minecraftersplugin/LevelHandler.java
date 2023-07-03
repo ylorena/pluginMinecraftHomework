@@ -12,7 +12,6 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.UUID;
 
-import org.bukkit.Chunk.LoadLevel;
 import org.bukkit.boss.BossBar;
 import org.bukkit.entity.Player;
 import org.bukkit.event.Event;
@@ -40,7 +39,7 @@ public class LevelHandler {
             createPlayerData();
         }
         if (event instanceof PlayerEvent) {
-            playerId = ((PlayerEvent) event).getPlayer().getUniqueId();
+            playerId = ((PlayerEvent)event).getPlayer().getUniqueId();
         }
         EventNamesEnum eventName = EventNamesEnum.findByEventName(event.getEventName());
 
@@ -63,7 +62,7 @@ public class LevelHandler {
     }
 
     public void levelUp(EventNamesEnum eventName) {
-        savePlayerData(eventName, getEventLevel(eventName) + 1, getEventExperience(eventName));
+        savePlayerData(eventName, getEventLevel(eventName) + 1, 0);
     }
 
     public void updateBossBar(EventNamesEnum eventName) {
